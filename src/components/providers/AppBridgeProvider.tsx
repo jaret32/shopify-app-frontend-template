@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Provider } from "@shopify/app-bridge-react";
-import { Banner, Layout, Page } from "@shopify/polaris";
+import { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Provider } from '@shopify/app-bridge-react';
+import { Banner, Layout, Page } from '@shopify/polaris';
 
 /**
  * A component to configure App Bridge.
@@ -12,12 +12,12 @@ import { Banner, Layout, Page } from "@shopify/polaris";
  *
  * See: https://shopify.dev/apps/tools/app-bridge/react-components
  */
-export function AppBridgeProvider({ children }) {
+export const AppBridgeProvider = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const history = useMemo(
     () => ({
-      replace: (path) => {
+      replace: (path: string) => {
         navigate(path, { replace: true });
       },
     }),
@@ -36,22 +36,22 @@ export function AppBridgeProvider({ children }) {
   // See: https://stackoverflow.com/questions/60482318/version-of-usememo-for-caching-a-value-that-will-never-change
   const [appBridgeConfig] = useState(() => {
     const host =
-      new URLSearchParams(location.search).get("host") ||
+      new URLSearchParams(location.search).get('host') ||
       window.__SHOPIFY_DEV_HOST;
 
     window.__SHOPIFY_DEV_HOST = host;
 
     return {
       host,
-      apiKey: process.env.SHOPIFY_API_KEY,
+      apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
       forceRedirect: true,
     };
   });
 
-  if (!process.env.SHOPIFY_API_KEY || !appBridgeConfig.host) {
-    const bannerProps = !process.env.SHOPIFY_API_KEY
+  if (!import.meta.env.VITE_SHOPIFY_API_KEY || !appBridgeConfig.host) {
+    const bannerProps = !import.meta.env.VITE_SHOPIFY_API_KEY
       ? {
-          title: "Missing Shopify API Key",
+          title: 'Missing Shopify API Key',
           children: (
             <>
               Your app is running without the SHOPIFY_API_KEY environment
@@ -61,7 +61,7 @@ export function AppBridgeProvider({ children }) {
           ),
         }
       : {
-          title: "Missing host query argument",
+          title: 'Missing host query argument',
           children: (
             <>
               Your app can only load if the URL has a <b>host</b> argument.
@@ -75,8 +75,8 @@ export function AppBridgeProvider({ children }) {
       <Page narrowWidth>
         <Layout>
           <Layout.Section>
-            <div style={{ marginTop: "100px" }}>
-              <Banner {...bannerProps} status="critical" />
+            <div style={{ marginTop: '100px' }}>
+              <Banner {...bannerProps} status='critical' />
             </div>
           </Layout.Section>
         </Layout>
@@ -89,4 +89,4 @@ export function AppBridgeProvider({ children }) {
       {children}
     </Provider>
   );
-}
+};
