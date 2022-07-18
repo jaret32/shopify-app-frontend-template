@@ -12,7 +12,11 @@ import { Banner, Layout, Page } from '@shopify/polaris';
  *
  * See: https://shopify.dev/apps/tools/app-bridge/react-components
  */
-export const AppBridgeProvider = ({ children }: { children: React.ReactNode }) => {
+export const AppBridgeProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const history = useMemo(
@@ -21,12 +25,12 @@ export const AppBridgeProvider = ({ children }: { children: React.ReactNode }) =
         navigate(path, { replace: true });
       },
     }),
-    [navigate]
+    [navigate],
   );
 
   const routerConfig = useMemo(
     () => ({ history, location }),
-    [history, location]
+    [history, location],
   );
 
   // The host may be present initially, but later removed by navigation.
@@ -43,13 +47,13 @@ export const AppBridgeProvider = ({ children }: { children: React.ReactNode }) =
 
     return {
       host,
-      apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
+      apiKey: process.env.SHOPIFY_API_KEY as string, // import.meta.env.VITE_SHOPIFY_API_KEY,
       forceRedirect: true,
     };
   });
 
-  if (!import.meta.env.VITE_SHOPIFY_API_KEY || !appBridgeConfig.host) {
-    const bannerProps = !import.meta.env.VITE_SHOPIFY_API_KEY
+  if (!process.env.SHOPIFY_API_KEY || !appBridgeConfig.host) {
+    const bannerProps = !process.env.SHOPIFY_API_KEY
       ? {
           title: 'Missing Shopify API Key',
           children: (
@@ -76,7 +80,7 @@ export const AppBridgeProvider = ({ children }: { children: React.ReactNode }) =
         <Layout>
           <Layout.Section>
             <div style={{ marginTop: '100px' }}>
-              <Banner {...bannerProps} status='critical' />
+              <Banner {...bannerProps} status="critical" />
             </div>
           </Layout.Section>
         </Layout>
@@ -86,7 +90,7 @@ export const AppBridgeProvider = ({ children }: { children: React.ReactNode }) =
 
   return (
     <Provider config={appBridgeConfig} router={routerConfig}>
-      {children}
+      {window.self === window.top ? 'Redirecting to Shopify' : children}
     </Provider>
   );
 };

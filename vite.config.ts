@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 
 if (
   process.env.npm_lifecycle_event === 'build' &&
@@ -43,7 +42,9 @@ export default defineConfig({
   define: {
     'process.env.SHOPIFY_API_KEY': JSON.stringify(process.env.SHOPIFY_API_KEY),
   },
-  plugins: [react()],
+  esbuild: {
+    jsxInject: `import React from 'react'`,
+  },
   resolve: {
     preserveSymlinks: true,
   },

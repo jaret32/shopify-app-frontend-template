@@ -2,13 +2,13 @@ import { Layout, Page, PageProps } from '@shopify/polaris';
 import { useState } from 'react';
 import { Outlet, useOutletContext } from 'react-router-dom';
 
-type ContextType = { 
-  pageProps: PageProps,
-  setPageProps: React.Dispatch<React.SetStateAction<PageProps>>
+type ContextType = {
+  pageProps: PageProps;
+  setPageProps: React.Dispatch<React.SetStateAction<PageProps>>;
 };
 
 export const PageLayout = () => {
-  const [ pageProps, setPageProps ] = useState<PageProps>({});
+  const [pageProps, setPageProps] = useState<PageProps>({});
 
   return (
     <Page {...pageProps}>
