@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { To, useLocation, useNavigate } from 'react-router-dom';
 import { Provider } from '@shopify/app-bridge-react';
 import { Banner, Layout, Page } from '@shopify/polaris';
 
@@ -10,18 +10,14 @@ import { Banner, Layout, Page } from '@shopify/polaris';
  * 1. Ensures that navigating inside the app updates the host URL.
  * 2. Configures the App Bridge Provider, which unlocks functionality provided by the host.
  *
- * See: https://shopify.dev/apps/tools/app-bridge/react-components
+ * See: https://shopify.dev/apps/tools/app-bridge/getting-started/using-react
  */
-export const AppBridgeProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export function AppBridgeProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const history = useMemo(
     () => ({
-      replace: (path: string) => {
+      replace: (path: To) => {
         navigate(path, { replace: true });
       },
     }),
@@ -41,13 +37,13 @@ export const AppBridgeProvider = ({
   const [appBridgeConfig] = useState(() => {
     const host =
       new URLSearchParams(location.search).get('host') ||
-      window.__SHOPIFY_DEV_HOST;
+      (window as any).__SHOPIFY_DEV_HOST;
 
-    window.__SHOPIFY_DEV_HOST = host;
+    (window as any).__SHOPIFY_DEV_HOST = host;
 
     return {
       host,
-      apiKey: process.env.SHOPIFY_API_KEY as string, // import.meta.env.VITE_SHOPIFY_API_KEY,
+      apiKey: process.env.SHOPIFY_API_KEY as string,
       forceRedirect: true,
     };
   });
@@ -90,7 +86,7 @@ export const AppBridgeProvider = ({
 
   return (
     <Provider config={appBridgeConfig} router={routerConfig}>
-      {window.self === window.top ? 'Redirecting to Shopify' : children}
+      {children}
     </Provider>
   );
-};
+}
