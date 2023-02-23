@@ -1,19 +1,24 @@
 import { BrowserRouter } from 'react-router-dom';
-import { AppNavigationMenu } from './components/navigation';
-import { AppBridgeProvider, PolarisProvider } from './components/providers';
-import { AppRoutes } from './components/routes';
 
-const App = () => {
+import {
+  AppBridgeProvider,
+  AppNavigationMenu,
+  AppRoutes,
+  PolarisProvider,
+  QueryProvider,
+} from './components';
+
+export default function App() {
   return (
     <PolarisProvider>
       <BrowserRouter>
         <AppBridgeProvider>
-          <AppNavigationMenu />
-          <AppRoutes />
+          <QueryProvider>
+            <AppNavigationMenu />
+            <AppRoutes />
+          </QueryProvider>
         </AppBridgeProvider>
       </BrowserRouter>
     </PolarisProvider>
   );
-};
-
-export default App;
+}

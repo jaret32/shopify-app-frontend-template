@@ -1,5 +1,11 @@
+# Environment Configuration
+.env
+
 # Dependency directory
 node_modules
+
+# Test coverage directory
+coverage
 
 # Ignore Apple macOS Desktop Services Store
 .DS_Store
@@ -8,5 +14,5 @@ node_modules
 logs
 *.log
 
-# vite build output
+# build output
 dist/
